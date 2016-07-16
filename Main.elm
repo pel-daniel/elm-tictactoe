@@ -10,14 +10,19 @@ board =
     ]
 
 
+main : Html msg
 main =
     table
         []
         (List.map boardRow board)
 
 
-boardRow : List String -> Html a
+boardRow : List String -> Html msg
 boardRow row =
-    tr
-        []
-        (List.map (\cell -> td [] [ text cell ]) row)
+    let
+        cellView cell =
+            td [] [ text cell ]
+    in
+        tr
+            []
+            (List.map cellView row)

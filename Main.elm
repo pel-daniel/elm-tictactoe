@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Html exposing (Html, table, text, td, tr)
+import Styles exposing (cellStyles)
 
 
 board =
@@ -21,7 +22,7 @@ boardRow : List String -> Html msg
 boardRow row =
     let
         cellView cell =
-            td [] [ text cell ]
+            td [ cellStyles ] [ text cell ]
     in
         tr
             []

@@ -15,7 +15,7 @@ board =
     List.repeat (boardSize * boardSize) Nothing
 
 
-type alias Model =
+type alias TicTacToe =
     { board : List (Maybe String)
     , turnNumber : Int
     }

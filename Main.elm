@@ -4,6 +4,7 @@ import Html exposing (Html, div, h1, p, table, text, td, tr)
 import Html.App as Html
 import Html.Events exposing (onClick)
 import Styles exposing (appStyles, cellStyles, headerStyles)
+import Utils
 
 
 boardSize =
@@ -64,7 +65,10 @@ boardView : Model -> Html Msg
 boardView model =
     table
         []
-        (List.indexedMap boardCell model)
+        (List.indexedMap boardCell model
+            |> Utils.slice boardSize
+            |> List.map (\row -> tr [] row)
+        )
 
 
 boardCell : Int -> String -> Html Msg

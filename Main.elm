@@ -21,8 +21,19 @@ main =
     Html.beginnerProgram
         { model = board
         , view = appView
-        , update = \_ model -> model
+        , update = update
         }
+
+
+type Msg
+    = NoOp
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        NoOp ->
+            model
 
 
 appView : Model -> Html msg

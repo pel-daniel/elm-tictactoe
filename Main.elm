@@ -12,11 +12,11 @@ boardSize =
 
 
 board =
-    List.repeat (boardSize * boardSize) ""
+    List.repeat (boardSize * boardSize) Nothing
 
 
 type alias Model =
-    { board : List String
+    { board : List (Maybe String)
     , turnNumber : Int
     }
 
@@ -45,7 +45,7 @@ update msg { board, turnCount } =
         MakeMove index ->
             { board =
                 List.take index board
-                    ++ [ marker turnCount ]
+                    ++ [ Just (marker turnCount) ]
                     ++ List.drop (index + 1) board
             , turnCount = turnCount + 1
             }
@@ -82,7 +82,7 @@ statusBar status =
         [ text (toString status) ]
 
 
-boardView : List String -> Html Msg
+boardView : List (Maybe String) -> Html Msg
 boardView board =
     table
         []
@@ -92,8 +92,15 @@ boardView board =
         )
 
 
-boardCell : Int -> String -> Html Msg
+boardCell : Int -> Maybe String -> Html Msg
 boardCell index cell =
-    td
-        [ cellStyles, onClick (MakeMove index) ]
-        [ text cell ]
+    case cell of
+        Nothing ->
+            td
+                [ cellStyles, onClick (MakeMove index) ]
+                [ text "" ]
+
+        Just marker ->
+            td
+                [ cellStyles ]
+                [ text marker ]

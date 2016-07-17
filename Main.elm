@@ -2,18 +2,20 @@ module Main exposing (main)
 
 import Html exposing (Html, div, h1, p, table, text, td, tr)
 import Html.App as Html
+import Html.Events exposing (onClick)
 import Styles exposing (appStyles, cellStyles, headerStyles)
 
 
+boardSize =
+    3
+
+
 board =
-    [ [ "", "", "" ]
-    , [ "", "", "" ]
-    , [ "", "", "" ]
-    ]
+    List.repeat (boardSize * boardSize) ""
 
 
 type alias Model =
-    List (List String)
+    List String
 
 
 main : Program Never
@@ -26,14 +28,14 @@ main =
 
 
 type Msg
-    = NoOp
+    = MakeMove Int
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        NoOp ->
-            model
+        MakeMove index ->
+            Debug.log "MakeMove" model
 
 
 appView : Model -> Html Msg
@@ -62,15 +64,11 @@ boardView : Model -> Html Msg
 boardView model =
     table
         []
-        (List.map boardRow model)
+        (List.indexedMap boardCell model)
 
 
-boardRow : List String -> Html msg
-boardRow row =
-    let
-        cellView cell =
-            td [ cellStyles ] [ text cell ]
-    in
-        tr
-            []
-            (List.map cellView row)
+boardCell : Int -> String -> Html Msg
+boardCell index cell =
+    td
+        [ cellStyles, onClick (MakeMove index) ]
+        [ text cell ]

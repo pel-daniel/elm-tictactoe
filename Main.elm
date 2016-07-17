@@ -16,36 +16,57 @@ board =
 
 
 type alias Model =
-    List String
+    { board : List String
+    , turnNumber : Int
+    }
 
 
 main : Program Never
 main =
     Html.beginnerProgram
-        { model = board
+        { model = init
         , view = appView
         , update = update
         }
+
+
+init =
+    { board = board
+    , turnCount = 0
+    }
 
 
 type Msg
     = MakeMove Int
 
 
-update : Msg -> Model -> Model
-update msg model =
+update msg { board, turnCount } =
     case msg of
         MakeMove index ->
-            Debug.log "MakeMove" model
+            { board =
+                List.take index board
+                    ++ [ marker turnCount ]
+                    ++ List.drop (index + 1) board
+            , turnCount = turnCount + 1
+            }
 
 
-appView : Model -> Html Msg
-appView model =
+marker : Int -> String
+marker turnCount =
+    case turnCount `rem` 2 of
+        0 ->
+            "x"
+
+        _ ->
+            "o"
+
+
+appView { board, turnCount } =
     div
         [ appStyles ]
         [ header
-        , statusBar "Player 1 turn"
-        , boardView model
+        , statusBar turnCount
+        , boardView board
         ]
 
 
@@ -58,14 +79,14 @@ header =
 statusBar status =
     p
         []
-        [ text status ]
+        [ text (toString status) ]
 
 
-boardView : Model -> Html Msg
-boardView model =
+boardView : List String -> Html Msg
+boardView board =
     table
         []
-        (List.indexedMap boardCell model
+        (List.indexedMap boardCell board
             |> Utils.slice boardSize
             |> List.map (\row -> tr [] row)
         )

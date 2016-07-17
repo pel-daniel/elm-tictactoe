@@ -1,7 +1,7 @@
 module Main exposing (main)
 
-import Html exposing (Html, table, text, td, tr)
-import Styles exposing (cellStyles)
+import Html exposing (Html, div, h1, table, text, td, tr)
+import Styles exposing (appStyles, cellStyles, headerStyles)
 
 
 board =
@@ -13,9 +13,19 @@ board =
 
 main : Html msg
 main =
-    table
-        []
-        (List.map boardRow board)
+    div
+        [ appStyles ]
+        [ header
+        , table
+            []
+            (List.map boardRow board)
+        ]
+
+
+header =
+    h1
+        [ headerStyles ]
+        [ text "Tic tac toe" ]
 
 
 boardRow : List String -> Html msg

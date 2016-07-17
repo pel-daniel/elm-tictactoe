@@ -20,6 +20,13 @@ styles =
     asPairs >> Html.Attributes.style
 
 
+appStyles =
+    styles
+        [ margin2 (px 0) auto
+        , width (px 320)
+        ]
+
+
 cellStyles =
     styles
         [ border3 (px 1) solid primaryColor
@@ -29,3 +36,8 @@ cellStyles =
         , textTransform uppercase
         , width (px cellSize)
         ]
+
+
+headerStyles =
+    styles
+        [ textAlign center ]

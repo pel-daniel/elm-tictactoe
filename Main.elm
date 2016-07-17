@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Html exposing (Html, div, h1, p, table, text, td, tr)
+import Html.App as Html
 import Styles exposing (appStyles, cellStyles, headerStyles)
 
 
@@ -11,15 +12,28 @@ board =
     ]
 
 
-main : Html msg
+type alias Model =
+    List (List String)
+
+
+main : Program Never
 main =
+    Html.beginnerProgram
+        { model = board
+        , view = appView
+        , update = \_ model -> model
+        }
+
+
+appView : Model -> Html msg
+appView model =
     div
         [ appStyles ]
         [ header
         , statusBar "Player 1 turn"
         , table
             []
-            (List.map boardRow board)
+            (List.map boardRow model)
         ]
 
 

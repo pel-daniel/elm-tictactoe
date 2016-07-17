@@ -36,15 +36,13 @@ update msg model =
             model
 
 
-appView : Model -> Html msg
+appView : Model -> Html Msg
 appView model =
     div
         [ appStyles ]
         [ header
         , statusBar "Player 1 turn"
-        , table
-            []
-            (List.map boardRow model)
+        , boardView model
         ]
 
 
@@ -58,6 +56,13 @@ statusBar status =
     p
         []
         [ text status ]
+
+
+boardView : Model -> Html Msg
+boardView model =
+    table
+        []
+        (List.map boardRow model)
 
 
 boardRow : List String -> Html msg

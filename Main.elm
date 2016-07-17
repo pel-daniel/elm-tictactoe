@@ -15,8 +15,16 @@ board =
     List.repeat (boardSize * boardSize) Nothing
 
 
+type alias Cell =
+    Maybe String
+
+
+type alias Board =
+    List Cell
+
+
 type alias TicTacToe =
-    { board : List (Maybe String)
+    { board : Board
     , turnNumber : Int
     }
 
@@ -82,7 +90,7 @@ statusBar status =
         [ text (toString status) ]
 
 
-boardView : List (Maybe String) -> Html Msg
+boardView : Board -> Html Msg
 boardView board =
     table
         []
@@ -92,7 +100,7 @@ boardView board =
         )
 
 
-boardCell : Int -> Maybe String -> Html Msg
+boardCell : Int -> Cell -> Html Msg
 boardCell index cell =
     case cell of
         Nothing ->

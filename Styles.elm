@@ -12,13 +12,17 @@ markerSize =
     cellSize - 20
 
 
+primaryColor =
+    hex "#d3d3d3"
+
+
 styles =
     asPairs >> Html.Attributes.style
 
 
 cellStyles =
     styles
-        [ border2 (px 1) solid
+        [ border3 (px 1) solid primaryColor
         , fontSize (px markerSize)
         , height (px cellSize)
         , textAlign center

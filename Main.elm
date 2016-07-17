@@ -5,9 +5,9 @@ import Styles exposing (cellStyles)
 
 
 board =
-    [ [ "x", "o", "x" ]
-    , [ "o", "x", "o" ]
-    , [ "x", "o", "x" ]
+    [ [ "", "", "" ]
+    , [ "", "", "" ]
+    , [ "", "", "" ]
     ]
 
 

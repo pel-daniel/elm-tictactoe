@@ -3,7 +3,14 @@ module TicTacToe exposing (main)
 import Html exposing (Html, button, div, h1, p, table, text, td, tr)
 import Html.App as Html
 import Html.Events exposing (onClick)
-import Styles exposing (appStyles, cellStyles, headerStyles)
+import Styles
+    exposing
+        ( appStyles
+        , buttonStyles
+        , cellStyles
+        , headerStyles
+        , statusBarStyles
+        )
 import Utils
 
 
@@ -172,34 +179,33 @@ header =
 
 statusBar : GameStatus -> Html Msg
 statusBar status =
+    div
+        [ statusBarStyles ]
+        (statusBarMessage status)
+
+
+statusBarMessage : GameStatus -> List (Html Msg)
+statusBarMessage status =
     case status of
         Winner player ->
-            div
-                []
-                [ text <| "Player '" ++ (toString player) ++ "' wins."
-                , button
-                    [ onClick NewGame ]
-                    [ text "New Game" ]
-                ]
+            [ text <| "Player '" ++ (toString player) ++ "' wins."
+            , button
+                [ onClick NewGame, buttonStyles ]
+                [ text "New Game" ]
+            ]
 
         InProgress (nextPlayer :: _) ->
-            div
-                []
-                [ text <| "Player '" ++ (toString nextPlayer) ++ "' turn." ]
+            [ text <| "Player '" ++ (toString nextPlayer) ++ "' turn." ]
 
         Draw ->
-            div
-                []
-                [ text "Draw."
-                , button
-                    [ onClick NewGame ]
-                    [ text "New Game" ]
-                ]
+            [ text "Draw."
+            , button
+                [ onClick NewGame, buttonStyles ]
+                [ text "New Game" ]
+            ]
 
         _ ->
-            div
-                []
-                [ text "Error." ]
+            [ text "Error." ]
 
 
 boardView : Board -> Html Msg

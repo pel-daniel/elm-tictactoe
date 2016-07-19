@@ -27,6 +27,15 @@ appStyles =
         ]
 
 
+buttonStyles =
+    styles
+        [ backgroundColor primaryColor
+        , fontSize (px 15)
+        , marginLeft (px 15)
+        , padding (px 5)
+        ]
+
+
 cellStyles =
     styles
         [ border3 (px 1) solid primaryColor
@@ -41,3 +50,8 @@ cellStyles =
 headerStyles =
     styles
         [ textAlign center ]
+
+
+statusBarStyles =
+    styles
+        [ lineHeight (px 40) ]

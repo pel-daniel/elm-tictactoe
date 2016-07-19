@@ -30,6 +30,7 @@ type alias Board =
 type alias TicTacToe =
     { board : Board
     , turnNumber : Int
+    , winner : Maybe Player
     }
 
 
@@ -45,6 +46,7 @@ main =
 init =
     { board = board
     , turnCount = 0
+    , winner = Nothing
     }
 
 
@@ -52,7 +54,7 @@ type Msg
     = MakeMove Int
 
 
-update msg { board, turnCount } =
+update msg { board, turnCount, winner } =
     case msg of
         MakeMove index ->
             { board =
@@ -60,6 +62,7 @@ update msg { board, turnCount } =
                     ++ [ Just (marker turnCount) ]
                     ++ List.drop (index + 1) board
             , turnCount = turnCount + 1
+            , winner = winner
             }
 
 
@@ -73,11 +76,11 @@ marker turnCount =
             "o"
 
 
-appView { board, turnCount } =
+appView { board, turnCount, winner } =
     div
         [ appStyles ]
         [ header
-        , statusBar turnCount
+        , statusBar turnCount winner
         , boardView board
         ]
 
@@ -88,10 +91,11 @@ header =
         [ text "Tic tac toe" ]
 
 
-statusBar status =
+statusBar : Int -> Maybe Player -> Html Msg
+statusBar turnCount winner =
     p
         []
-        [ text (toString status) ]
+        [ text (toString turnCount ++ " " ++ (toString winner)) ]
 
 
 boardView : Board -> Html Msg

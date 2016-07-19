@@ -102,8 +102,12 @@ update msg { board, status } =
 updateStatus : Player -> List Player -> Board -> GameStatus
 updateStatus currentPlayer nextMoves board =
     let
+        slicedBoard =
+            Utils.slice boardSize board
+
         winner =
-            winnerInRows currentPlayer (Utils.slice boardSize board)
+            winnerInRows currentPlayer slicedBoard
+                || winnerInColumns currentPlayer slicedBoard
     in
         case ( winner, nextMoves ) of
             ( True, _ ) ->
@@ -117,8 +121,14 @@ updateStatus currentPlayer nextMoves board =
 
 
 winnerInRows : Player -> SlicedBoard -> Bool
-winnerInRows player board =
-    List.any (winnerInRow player) board
+winnerInRows player slicedBoard =
+    List.any (winnerInRow player) slicedBoard
+
+
+winnerInColumns : Player -> SlicedBoard -> Bool
+winnerInColumns player slicedBoard =
+    Utils.transpose slicedBoard
+        |> List.any (winnerInRow player)
 
 
 winnerInRow : Player -> List Cell -> Bool

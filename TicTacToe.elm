@@ -1,4 +1,4 @@
-module Main exposing (main)
+module TicTacToe exposing (main)
 
 import Html exposing (Html, div, h1, p, table, text, td, tr)
 import Html.App as Html

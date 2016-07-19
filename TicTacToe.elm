@@ -121,11 +121,11 @@ winnerInRow player row =
 -- VIEW
 
 
-appView { board, winner } =
+appView { board, moves, winner } =
     div
         [ appStyles ]
         [ header
-        , statusBar winner
+        , statusBar winner (List.head moves)
         , boardView board
         ]
 
@@ -136,11 +136,23 @@ header =
         [ text "Tic tac toe" ]
 
 
-statusBar : Maybe Player -> Html Msg
-statusBar winner =
-    p
-        []
-        [ text (toString winner) ]
+statusBar : Maybe Player -> Maybe Player -> Html Msg
+statusBar winner currentPlayer =
+    let
+        message =
+            case ( winner, currentPlayer ) of
+                ( Just player, _ ) ->
+                    "Player '" ++ (toString player) ++ "' wins."
+
+                ( _, Just player ) ->
+                    "Player '" ++ (toString player) ++ "' turn."
+
+                ( Nothing, Nothing ) ->
+                    "Draw."
+    in
+        p
+            []
+            [ text message ]
 
 
 boardView : Board -> Html Msg

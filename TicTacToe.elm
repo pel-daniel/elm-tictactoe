@@ -58,60 +58,60 @@ main =
 
 init =
     { board = board
-    , turnCount = 0
+    , moves = allMoves
     , winner = Nothing
     }
 
 
+board : Board
 board =
     List.repeat (boardSize * boardSize) Nothing
+
+
+allMoves : List Player
+allMoves =
+    List.repeat 5 X
+        |> List.intersperse O
 
 
 
 -- UPDATE
 
 
-update msg { board, turnCount, winner } =
-    case msg of
-        MakeMove index ->
+update msg { board, moves, winner } =
+    case ( msg, moves ) of
+        ( _, [] ) ->
+            { board = board, moves = moves, winner = winner }
+
+        ( MakeMove index, player :: newMoves ) ->
             let
                 newBoard =
                     List.take index board
-                        ++ [ Just (marker turnCount) ]
+                        ++ [ Just player ]
                         ++ List.drop (index + 1) board
             in
                 { board = newBoard
-                , turnCount = turnCount + 1
-                , winner = updateWinner newBoard
+                , moves = newMoves
+                , winner = updateWinner player newBoard
                 }
 
 
-marker : Int -> Player
-marker turnCount =
-    case turnCount `rem` 2 of
-        0 ->
-            X
-
-        _ ->
-            O
+updateWinner : Player -> Board -> Maybe Player
+updateWinner player board =
+    winnerInRows player (Utils.slice boardSize board)
 
 
-updateWinner : Board -> Maybe Player
-updateWinner board =
-    winnerInRows (Utils.slice boardSize board)
-
-
-winnerInRows : SlicedBoard -> Maybe Player
-winnerInRows board =
-    List.map (winnerInRow X) board
+winnerInRows : Player -> SlicedBoard -> Maybe Player
+winnerInRows player board =
+    List.map (winnerInRow player) board
         |> Maybe.oneOf
 
 
 winnerInRow : Player -> List Cell -> Maybe Player
-winnerInRow marker row =
-    case row == List.repeat boardSize (Just marker) of
+winnerInRow player row =
+    case row == List.repeat boardSize (Just player) of
         True ->
-            Just marker
+            Just player
 
         False ->
             Nothing
@@ -121,11 +121,11 @@ winnerInRow marker row =
 -- VIEW
 
 
-appView { board, turnCount, winner } =
+appView { board, winner } =
     div
         [ appStyles ]
         [ header
-        , statusBar turnCount winner
+        , statusBar winner
         , boardView board
         ]
 
@@ -136,11 +136,11 @@ header =
         [ text "Tic tac toe" ]
 
 
-statusBar : Int -> Maybe Player -> Html Msg
-statusBar turnCount winner =
+statusBar : Maybe Player -> Html Msg
+statusBar winner =
     p
         []
-        [ text (toString turnCount ++ " " ++ (toString winner)) ]
+        [ text (toString winner) ]
 
 
 boardView : Board -> Html Msg

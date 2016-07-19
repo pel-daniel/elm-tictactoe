@@ -15,8 +15,12 @@ board =
     List.repeat (boardSize * boardSize) Nothing
 
 
+type alias Player =
+    String
+
+
 type alias Cell =
-    Maybe String
+    Maybe Player
 
 
 type alias Board =

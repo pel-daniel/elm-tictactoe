@@ -31,6 +31,10 @@ type alias Board =
     List Cell
 
 
+type alias SlicedBoard =
+    List (List Cell)
+
+
 type alias TicTacToe =
     { board : Board
     , turnNumber : Int
@@ -69,13 +73,16 @@ board =
 update msg { board, turnCount, winner } =
     case msg of
         MakeMove index ->
-            { board =
-                List.take index board
-                    ++ [ Just (marker turnCount) ]
-                    ++ List.drop (index + 1) board
-            , turnCount = turnCount + 1
-            , winner = winner
-            }
+            let
+                newBoard =
+                    List.take index board
+                        ++ [ Just (marker turnCount) ]
+                        ++ List.drop (index + 1) board
+            in
+                { board = newBoard
+                , turnCount = turnCount + 1
+                , winner = updateWinner newBoard
+                }
 
 
 marker : Int -> String
@@ -86,6 +93,27 @@ marker turnCount =
 
         _ ->
             "o"
+
+
+updateWinner : Board -> Maybe Player
+updateWinner board =
+    winnerInRows (Utils.slice boardSize board)
+
+
+winnerInRows : SlicedBoard -> Maybe Player
+winnerInRows board =
+    List.map (winnerInRow "x") board
+        |> Maybe.oneOf
+
+
+winnerInRow : Player -> List Cell -> Maybe Player
+winnerInRow marker row =
+    case row == List.repeat boardSize (Just marker) of
+        True ->
+            Just marker
+
+        False ->
+            Nothing
 
 
 

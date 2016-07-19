@@ -96,7 +96,7 @@ boardView board =
         []
         (List.indexedMap boardCell board
             |> Utils.slice boardSize
-            |> List.map (\row -> tr [] row)
+            |> List.map (tr [])
         )
 
 

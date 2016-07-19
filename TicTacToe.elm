@@ -24,6 +24,12 @@ type Player
     | O
 
 
+type GameStatus
+    = InProgress (List Player)
+    | Draw
+    | Winner Player
+
+
 type alias Cell =
     Maybe Player
 
@@ -38,8 +44,7 @@ type alias SlicedBoard =
 
 type alias TicTacToe =
     { board : Board
-    , turnNumber : Int
-    , winner : Maybe Player
+    , status : GameStatus
     }
 
 
@@ -58,8 +63,7 @@ main =
 
 init =
     { board = board
-    , moves = allMoves
-    , winner = Nothing
+    , status = InProgress allMoves
     }
 
 
@@ -78,12 +82,9 @@ allMoves =
 -- UPDATE
 
 
-update msg { board, moves, winner } =
-    case ( msg, moves ) of
-        ( _, [] ) ->
-            { board = board, moves = moves, winner = winner }
-
-        ( MakeMove index, player :: newMoves ) ->
+update msg { board, status } =
+    case ( msg, status ) of
+        ( MakeMove index, InProgress (player :: nextMoves) ) ->
             let
                 newBoard =
                     List.take index board
@@ -91,41 +92,49 @@ update msg { board, moves, winner } =
                         ++ List.drop (index + 1) board
             in
                 { board = newBoard
-                , moves = newMoves
-                , winner = updateWinner player newBoard
+                , status = updateStatus player nextMoves newBoard
                 }
 
-
-updateWinner : Player -> Board -> Maybe Player
-updateWinner player board =
-    winnerInRows player (Utils.slice boardSize board)
+        ( _, _ ) ->
+            { board = board, status = status }
 
 
-winnerInRows : Player -> SlicedBoard -> Maybe Player
+updateStatus : Player -> List Player -> Board -> GameStatus
+updateStatus currentPlayer nextMoves board =
+    let
+        winner =
+            winnerInRows currentPlayer (Utils.slice boardSize board)
+    in
+        case ( winner, nextMoves ) of
+            ( True, _ ) ->
+                Winner currentPlayer
+
+            ( False, [] ) ->
+                Draw
+
+            ( False, nextMoves ) ->
+                InProgress nextMoves
+
+
+winnerInRows : Player -> SlicedBoard -> Bool
 winnerInRows player board =
-    List.map (winnerInRow player) board
-        |> Maybe.oneOf
+    List.any (winnerInRow player) board
 
 
-winnerInRow : Player -> List Cell -> Maybe Player
+winnerInRow : Player -> List Cell -> Bool
 winnerInRow player row =
-    case row == List.repeat boardSize (Just player) of
-        True ->
-            Just player
-
-        False ->
-            Nothing
+    row == List.repeat boardSize (Just player)
 
 
 
 -- VIEW
 
 
-appView { board, moves, winner } =
+appView { board, status } =
     div
         [ appStyles ]
         [ header
-        , statusBar winner (List.head moves)
+        , statusBar status
         , boardView board
         ]
 
@@ -136,19 +145,22 @@ header =
         [ text "Tic tac toe" ]
 
 
-statusBar : Maybe Player -> Maybe Player -> Html Msg
-statusBar winner currentPlayer =
+statusBar : GameStatus -> Html Msg
+statusBar status =
     let
         message =
-            case ( winner, currentPlayer ) of
-                ( Just player, _ ) ->
+            case status of
+                Winner player ->
                     "Player '" ++ (toString player) ++ "' wins."
 
-                ( _, Just player ) ->
-                    "Player '" ++ (toString player) ++ "' turn."
+                InProgress (nextPlayer :: _) ->
+                    "Player '" ++ (toString nextPlayer) ++ "' turn."
 
-                ( Nothing, Nothing ) ->
+                Draw ->
                     "Draw."
+
+                _ ->
+                    "Error."
     in
         p
             []

@@ -11,8 +11,12 @@ boardSize =
     3
 
 
-board =
-    List.repeat (boardSize * boardSize) Nothing
+
+-- TYPES
+
+
+type Msg
+    = MakeMove Int
 
 
 type alias Player =
@@ -43,6 +47,10 @@ main =
         }
 
 
+
+-- INIT
+
+
 init =
     { board = board
     , turnCount = 0
@@ -50,8 +58,12 @@ init =
     }
 
 
-type Msg
-    = MakeMove Int
+board =
+    List.repeat (boardSize * boardSize) Nothing
+
+
+
+-- UPDATE
 
 
 update msg { board, turnCount, winner } =
@@ -74,6 +86,10 @@ marker turnCount =
 
         _ ->
             "o"
+
+
+
+-- VIEW
 
 
 appView { board, turnCount, winner } =

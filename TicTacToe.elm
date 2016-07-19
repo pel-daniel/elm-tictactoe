@@ -19,8 +19,9 @@ type Msg
     = MakeMove Int
 
 
-type alias Player =
-    String
+type Player
+    = X
+    | O
 
 
 type alias Cell =
@@ -85,14 +86,14 @@ update msg { board, turnCount, winner } =
                 }
 
 
-marker : Int -> String
+marker : Int -> Player
 marker turnCount =
     case turnCount `rem` 2 of
         0 ->
-            "x"
+            X
 
         _ ->
-            "o"
+            O
 
 
 updateWinner : Board -> Maybe Player
@@ -102,7 +103,7 @@ updateWinner board =
 
 winnerInRows : SlicedBoard -> Maybe Player
 winnerInRows board =
-    List.map (winnerInRow "x") board
+    List.map (winnerInRow X) board
         |> Maybe.oneOf
 
 
@@ -163,4 +164,4 @@ boardCell index cell =
         Just marker ->
             td
                 [ cellStyles ]
-                [ text marker ]
+                [ text (toString marker) ]

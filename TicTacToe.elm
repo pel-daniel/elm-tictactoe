@@ -69,6 +69,7 @@ main =
 -- INIT
 
 
+init : TicTacToe
 init =
     { board = board
     , status = InProgress allMoves
@@ -90,6 +91,7 @@ allMoves =
 -- UPDATE
 
 
+update : Msg -> TicTacToe -> TicTacToe
 update msg { board, status } =
     case ( msg, status ) of
         ( MakeMove index, InProgress (player :: nextMoves) ) ->
@@ -162,6 +164,7 @@ winnerInRow player row =
 -- VIEW
 
 
+appView : TicTacToe -> Html Msg
 appView { board, status } =
     div
         [ appStyles ]
@@ -171,6 +174,7 @@ appView { board, status } =
         ]
 
 
+header : Html Msg
 header =
     h1
         [ headerStyles ]

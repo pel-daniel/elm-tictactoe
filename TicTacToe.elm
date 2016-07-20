@@ -209,7 +209,7 @@ statusBarMessage status =
             ]
 
         _ ->
-            [ text "Error." ]
+            Debug.crash "No more moves for InProgress game"
 
 
 boardView : Board -> Html Msg

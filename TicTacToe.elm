@@ -147,12 +147,9 @@ winnerInColumns player slicedBoard =
 
 winnerInDiagonals : Player -> SlicedBoard -> Bool
 winnerInDiagonals player slicedBoard =
-    case slicedBoard of
-        [ [ x1, x2, x3 ], [ y1, y2, y3 ], [ z1, z2, z3 ] ] ->
-            List.any (winnerInRow player) [ [ x1, y2, z3 ], [ x3, y2, z1 ] ]
-
-        _ ->
-            Debug.crash "Strange board encountered"
+    List.any
+        (winnerInRow player)
+        [ Utils.diagonal slicedBoard, Utils.inverseDiagonal slicedBoard ]
 
 
 winnerInRow : Player -> List Cell -> Bool

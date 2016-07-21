@@ -83,8 +83,18 @@ board =
 
 allMoves : List Player
 allMoves =
-    List.repeat 5 X
-        |> List.intersperse O
+    let
+        totalMoves =
+            boardSize * boardSize
+
+        halfMoves =
+            ceiling (totalMoves / 2)
+
+        concatRepeat =
+            (List.repeat halfMoves) >> List.concat
+    in
+        concatRepeat [ X, O ]
+            |> List.take totalMoves
 
 
 
